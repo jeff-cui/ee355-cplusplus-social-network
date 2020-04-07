@@ -31,7 +31,7 @@ bool Date::operator==(const Date& rhs){
         return false;
 }
 
-==
+
 
 
 bool Date::operator!=(const Date& rhs){
@@ -114,16 +114,15 @@ bool Date::set_date(int day, int month, int year){
     // We could simply use other variable names for the argument of this method, like d, m, and y.
     // But we intentionally used the same names as the class attributes, to show how the scope of a variable works 
     // Moreover, understand how we are using "this->" in this method!
-    // TODO: there is a bug in this method! Fix it!
     this->month = month; 
     this->day = day;
     this->year = year;
     if (check_date()==false){
         cout << "Error! Invalid date!" << endl;
         cout << "Date set to default!" << endl;
-        day = 1;
-        month = 1;
-        year = 1970;
+        this->day = 1;
+        this->month = 1;
+        this->year = 1970;
         return false;
     }
     return true;
