@@ -3,12 +3,14 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 // TODO: You may need to add other libraries here!
 using namespace std;
 
 
 class Contact {
-    // TODO: private or protected? Look at its children!	
+//TODO: protected or private
+protected:
 	string type;
 public:
     // the following functions are pure virtual functions
@@ -24,15 +26,21 @@ private:
 public:
     Email(string type, string email_addr);
     // TODO: Complete me!
+    string get_contact(string style = "full");
+    void print();
+    void set_contact();
+
 };
 
 
 class Phone: public Contact{
 private:
-    // TODO: modify dataType! Can int store 10 digit phone-number? 
-	dataType phone_num; 
+	string phone_num; 
 public:
     Phone(string type, string phone_number);
+    string get_contact(string style = "full");
+    void print();
+    void set_contact();
     // TODO: Complete me!
 };
 
