@@ -29,7 +29,7 @@ string Email::get_contact(string style){
     if (style=="full")
 	    return "Email (" + type + "): " + email_addr;
     else 
-        return email_addr;
+        return "(" + type + ") " + email_addr;
 }
 
 
@@ -110,8 +110,6 @@ void Phone::set_contact(){
     }
 }
 
-
-
 string Phone::get_contact(string style){
     // TODO:
 
@@ -124,7 +122,7 @@ string Phone::get_contact(string style){
     if (style=="full")
         return "phone (" + type + "): " + num;
     else 
-        return num;
+         return "(" + type + ") " + num;
 
 }
 
