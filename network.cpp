@@ -338,7 +338,6 @@ void Network::showMenu(){
                 push_front(newEntry);
                 cout << "Person added to database \n";
             }
-
         }
         else if (opt == 4){
             // TODO: Complete me!
