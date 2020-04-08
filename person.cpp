@@ -1,4 +1,3 @@
-
 #include "person.h"
 
 Person::Person(){
@@ -15,7 +14,7 @@ Person::~Person(){
 }
 
 
-Person::Person(string fname, string lname, string bdate, string email, string phone) {
+Person::Person(string fname, string lname, string bdate, string input_email, string input_phone) {
     // TODO: Complete this method!
     // phone and email strings are in full version
 
@@ -29,7 +28,7 @@ Person::Person(string fname, string lname, string bdate, string email, string ph
     int j = 0;
 
     // reads in and ignores until we find '('
-    while (email[j] != '(') {
+    while (input_email[j] != '(') {
         j++;
     }
 
@@ -37,13 +36,13 @@ Person::Person(string fname, string lname, string bdate, string email, string ph
     j++;
 
     // reads into email_type until we find ')'
-    while (email[j] != ')') {
-        email_type.append(email[j]);
+    while (input_email[j] != ')') {
+        email_type.push_back(input_email[j]);
         j++;
     }
     // reads in the email
-    for (int k = j+2; k < email.size(); k++) {
-        addr.append(email[k]);
+    for (int k = j+3; k < input_email.size(); k++) {
+        addr.push_back(input_email[k]);
     }
 
     // create email class
@@ -51,7 +50,7 @@ Person::Person(string fname, string lname, string bdate, string email, string ph
 
 
     // reads in and ignores until we find '('
-    while (phone[i] != '(') {
+    while (input_phone[i] != '(') {
         i++;
     }
 
@@ -59,14 +58,14 @@ Person::Person(string fname, string lname, string bdate, string email, string ph
     i++;
 
     // reads into phone_type until we find ')'
-    while (phone[i] != ')') {
-        phone_type.append(phone[i]);
+    while (input_phone[i] != ')') {
+        phone_type.push_back(input_phone[i]);
         i++;
     }
 
     // reads in the phone
-    for (int k = i+2; k < phone.size(); k++) {
-        num.append(phone[k]);
+    for (int k = i+3; k < input_phone.size(); k++) {
+        num.push_back(input_phone[k]);
     }
 
     // create phone class
@@ -84,7 +83,6 @@ Person::Person(string fname, string lname, string bdate, string email, string ph
 Person::Person(string filename){
     set_person(filename);
 }
-
 
 void Person::set_person(){
     // prompts for the information of the user from the terminal
@@ -147,7 +145,7 @@ void Person::set_person(string filename){
     */
 
     fstream file;
-    file.open(filename);
+    file.open(filename.c_str());
     string input;
 
     // for 5 lines in our file
@@ -174,13 +172,13 @@ void Person::set_person(string filename){
 
             // reads in the type without parenthesis
             while (input[j] != ')') {
-                phone_type.append(input[j]);
+                phone_type.push_back(input[j]);
                 j++;
             }
 
             // reads in the number
             for (int k = j+2; k < input.size(); k++) {
-                number.append(input[k]);
+                number.push_back(input[k]);
             }
 
             // create phone number class
@@ -194,13 +192,13 @@ void Person::set_person(string filename){
 
             // reads in the type without parenthesis
             while (input[j] != ')') {
-                email_type.append(input[j]);
+                email_type.push_back(input[j]);
                 j++;
             }
 
             // reads in the email
             for (int k = j+2; k < input.size(); k++) {
-                addr.append(input[k]);
+                addr.push_back(input[k]);
             }
 
             // create email class
@@ -219,8 +217,8 @@ bool Person::operator==(const Person& rhs){
     // refer to bool Date::operator==(const Date& rhs)
 
     // get birthdates
-    string bday = get_date();
-    string rhs_bday = rhs.get_date();
+    string bday = birthdate->get_date();
+    string rhs_bday = rhs.birthdate->get_date();
 
     // check first name, last name and birthdates
     if ( (f_name == rhs.f_name) && (l_name == rhs.l_name) && (bday == rhs_bday) ) {
@@ -230,6 +228,7 @@ bool Person::operator==(const Person& rhs){
         return false;
     }
 }
+
 
 bool Person::operator!=(const Person& rhs){ 
     // TODO: Complete this method!
