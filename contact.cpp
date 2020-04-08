@@ -120,10 +120,9 @@ string Phone::get_contact(string style){
     string num = x1 + "-" + x2 + "-" + x3; 
 
     if (style=="full")
-        return "phone (" + type + "): " + num;
+        return "Phone (" + type + "): " + num;
     else 
          return "(" + type + ") " + num;
-
 }
 
 

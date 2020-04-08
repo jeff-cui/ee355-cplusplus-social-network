@@ -19,7 +19,17 @@ int main(){
         * And remember, you have a deadline for this PA!
        */ 
           while ((ent = readdir (dir)) != NULL) {
-              cout << ent->d_name << endl;
+              string file_name = ent->d_name;
+
+              for (int i = 0; i < file_name.size(); i++) {
+                if (file_name[i] == '.') {
+                  if (file_name[i+1] == 'd' && file_name[i+2] == 'b') {
+                    cout << file_name << endl;
+                  }
+                }
+              }
+              
+              //cout << ent->d_name << endl;
           }
           closedir (dir);
     } else {

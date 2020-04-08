@@ -41,7 +41,7 @@ Person::Person(string fname, string lname, string bdate, string input_email, str
         j++;
     }
     // reads in the email
-    for (int k = j+3; k < input_email.size(); k++) {
+    for (int k = j+2; k < input_email.size(); k++) {
         addr.push_back(input_email[k]);
     }
 
@@ -64,7 +64,7 @@ Person::Person(string fname, string lname, string bdate, string input_email, str
     }
 
     // reads in the phone
-    for (int k = i+3; k < input_phone.size(); k++) {
+    for (int k = i+2; k < input_phone.size(); k++) {
         num.push_back(input_phone[k]);
     }
 

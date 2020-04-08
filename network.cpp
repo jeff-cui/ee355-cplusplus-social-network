@@ -3,6 +3,8 @@
 #include <limits>
 #include "misc.h"
 #include <fstream>
+#include <dirent.h>
+#include <vector>
 
 Network::Network(){
     head = NULL;
@@ -41,6 +43,26 @@ void Network::push_front(Person* newEntry){
 void Network::push_back(Person* newEntry){
     // TODO: Complete this method!
     // Adds a new Person (newEntry) to the back of LL
+
+    // set the next and prev of newEntry
+    newEntry->next = NULL;
+    newEntry->prev = tail;
+
+    // this checks if it's the first node in the LL
+    if (tail != NULL) {
+        // make tail point to the newEntry
+        tail->next = newEntry;
+    }
+    // else statement only occurs once when tail = NULL
+    // this means the node we're adding is the first node in the LL
+    // therefore head = newEntry
+    else {
+        head = newEntry;
+    }
+
+    // tail is now newEntry
+    tail = newEntry;
+    count++;
 }
 
 
@@ -66,12 +88,27 @@ void Network::saveDB(string filename){
     // Look at studentDB.db as a template
     // Note: notice the intentional flaw in this code, as compared to the note mentioned in printDB, 
     // now the one who is responsible for implementing Network should be aware of implementation of Person, not good! You will fix this in PA2. 
+
+    fstream outfile;
+    outfile.open(filename.c_str());
+
+    Person* ptr = head;
+    while(ptr != NULL){
+        ptr->print_person();
+        outfile << "------------------------------" << endl;
+        ptr = ptr->next;
+    }
+
+    // get_date()
+    // get_contact() for Email and Phone with no full style
+
+
 }
 
 
 void Network::loadDB(string filename){
     // TODO: Complete this method!
-    // Loads the netwrok from file <filename>
+    // Loads the network from file <filename>
     // The format of the input file is similar to saveDB
     // Look at network studentDB.txt as a template
     // Phone number can be with dashes or without them
@@ -88,8 +125,7 @@ void Network::loadDB(string filename){
     tail = NULL;
     ifstream infile;
     infile.open(filename.c_str());
-    string buff, fname, lname, bdate;
-    
+    string buff, fname, lname, bdate, email, phone;
     // TODO: Decalre other vairiable if needed
 
     while(getline(infile, buff)){
@@ -98,11 +134,14 @@ void Network::loadDB(string filename){
         getline(infile, bdate);
         // TODO: read email and phone
         
+        getline(infile, email);
+        getline(infile, phone);
+
         // this line is to read the dash line
         getline(infile, buff);
         // TODO: use the constructor Person::Person(fname, lname, bdate, email, phone) to modify the following line
-        Person* newEntry = NULL;
-        
+        Person* newEntry = new Person(fname, lname, bdate, email, phone);
+
         this->push_back(newEntry);
     }
 }
@@ -114,6 +153,27 @@ Person* Network::search(string fname, string lname, string bdate){
     // And use == overloaded operator between two persons
     // if found, returns a pointer to it, else returns NULL
     // Don't forget to delete allocated memory.
+
+    // make a searchEntry with the info we want to search for
+    Person* searchEntry = new Person(fname, lname, bdate, "() test@usc.edu", "() 1234567890");
+
+    // pointer that starts at head of LL
+    Person* ptr = head;
+
+    // run through LL
+    while(ptr != NULL) {
+        // if our ptr equals searchEntry, return the ptr
+        if (*ptr == *searchEntry) {
+            delete searchEntry;
+            return ptr;
+        }
+
+        ptr = ptr->next;
+    }
+
+    // if we don't find a match, return NULL
+    delete searchEntry;
+    return NULL;
 }
 
 bool Network::remove(string fname, string lname, string bdate){
@@ -155,41 +215,151 @@ void Network::showMenu(){
         }
         
         // You may need these variables! Add more if you want!
-        string fname, lname, fileName, bdate;
+        string fname, lname, fileName, bdate, email, phone;
         cout << "\033[2J\033[1;1H";
 
         if (opt==1){
             // TODO: Complete me!
             cout << "Loading network database \n";
+
+            // create a vector that stores file names
+            vector < string > fileList;
+            int db_match_flag = 0;
+
             // TODO: print all the files in this same directory that have ".db" format
-            // Take a look into sample_files.cpp 
+            // code taken from sample_file.cpp and adjusted to find ".db" format
+            DIR *dir;
+            struct dirent *ent;
+            char targetFolderAddr[] = "./";
+
+            // open current directory
+            if ((dir = opendir ("./")) != NULL) {
+
+                cout << "All files that have .db format in this directory: " << endl;
+
+                // while we can read from directory
+                while ((ent = readdir (dir)) != NULL) {
+                    string file_name = ent->d_name;
+
+                    // check file_name and find the .db format
+                    for (int i = 0; i < file_name.size(); i++) {
+                        if (file_name[i] == '.') {
+                            // if we find .db then print out the file name
+                            if (file_name[i+1] == 'd' && file_name[i+2] == 'b') {
+                                cout << file_name << endl;
+                                fileList.push_back(file_name);
+                            }
+                        }
+                    }     
+                }
+                
+                closedir (dir);
+            } 
+
+            // can't open directory
+            else {
+                /* could not open directory */
+                perror ("No directory!");
+            }
+
+            cout << endl;
+
+            // read in fileName from user input
             cout << "Enter the name of the load file: "; 
-            // If file with name FILENAME does not exist: 
-            cout << "File FILENAME does not exist!" << endl;
-            // If file is loaded successfully, also print the count of persons in it: 
-            cout << "Network loaded from " << fileName << " with " << count << " persons \n";
+            getline(cin,fileName);
+
+            // iterate through our list of possible .db files
+            for (int i = 0; i < fileList.size(); i++) {
+                // if we have a match with user input and possible .db files
+                // change flag to 1
+                if (fileName == fileList[i]) {
+                    db_match_flag = 1;
+                }
+            }
+            // have a matching .db file
+            if (db_match_flag == 1) {
+                loadDB(fileName.c_str());
+                // If file is loaded successfully, also print the count of persons in it: 
+                cout << "Network loaded from " << fileName << " with " << count << " persons \n";
+            }
+            // no match
+            else {
+                // If file with name FILENAME does not exist: 
+                cout << "File FILENAME does not exist!" << endl;
+            }
             
         }
         else if (opt==2){
             // TODO: Complete me!
             cout << "Saving network database \n";
+
             cout << "Enter the name of the save file: ";
+            getline(cin,fileName);
             cout << "Network saved in " << fileName << endl;
+
+            // if there is nothing in our database aka head points to NULL
+            if (head == NULL) {
+                Person* newEntry = new Person("", "", "", "(Nothing) nothing@usc.edu", "(Nothing) 123-456-7890");
+                push_front(newEntry);
+                saveDB(fileName.c_str());
+            }
+            else {
+                saveDB(fileName.c_str());
+            }
         }
         else if (opt == 3){
             // TODO: Complete me!
             // TODO: use push_front, and not push_back 
             // Add a new person ONLY if it does not exists!
             cout << "Adding a new person \n";
+
+            // ask for person's info
+            cout << "First Name: ";
+            getline(cin,fname);
+            cout << "Last Name: ";
+            getline(cin,lname);
+            cout << "Birthdate (M/D/YYYY): ";
+            getline(cin,bdate);
+            cout << "Email ( (Type) example@usc.edu ): ";
+            getline(cin,email);
+            cout << "Phone Number ( (Type) 000-000-0000 ): ";
+            getline(cin,phone);
+
+            // search if they exist already or not
+            Person* ptr = search(fname, lname, bdate);
+
+            // if found: don't create entry
+            if (ptr != NULL) {
+                cout << "Person already exists! \n";
+            }
+            // if not found, create the entry with push_front
+            else {
+                Person* newEntry = new Person(fname, lname, bdate, email, phone);
+                push_front(newEntry);
+                cout << "Person added to database \n";
+            }
+
         }
         else if (opt == 4){
             // TODO: Complete me!
             cout << "Searching: \n";
             cout << "First Name: ";
+            getline(cin,fname);
             cout << "Last Name: ";
+            getline(cin,lname);
             cout << "Birthdate (M/D/YYYY): ";
+            getline(cin,bdate);
+
+            Person* ptr = search(fname, lname, bdate);
+
             // if found: print person's firstname, lastname, bdate, email, phone using print_person()
+            if (ptr != NULL) {
+                ptr->print_person();
+            }
             // if not, cout << "Not found! \n";
+            else {
+                cout << "Not found! \n";
+            }
         }
         else if (opt==5){
             // TODO: Complete me!
