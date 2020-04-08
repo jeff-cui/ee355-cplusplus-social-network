@@ -36,13 +36,13 @@ void Person::set_person(){
 
     cout << "First Name: ";
     // pay attention to how we read first name, as it can have spaces!
-    std::getline(std::cin,f_name);
+    getline(cin,f_name);
 
 	cout << "Last Name: ";
-    std::getline(std::cin,l_name);
+    getline(cin,l_name);
 
     cout << "Birthdate (M/D/YYYY): ";
-    std::getline(std::cin,temp);
+    getline(cin,temp);
     // pay attention to how we passed argument to the constructor of a new object created dynamically using new command
     birthdate = new Date(temp); 
 

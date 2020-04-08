@@ -5,6 +5,8 @@
 #include "date.h"
 #include "contact.h"
 #include "fstream"
+using namespace std;
+
 class Person{
     friend class Network;
 
