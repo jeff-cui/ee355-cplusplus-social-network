@@ -203,6 +203,7 @@ void Network::showMenu(){
         else if (opt==6){
             // TODO: Complete me!
             cout << "Network Database: \n";
+            printDB();
         }
         else
             cout << "Nothing matched!\n";
