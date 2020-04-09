@@ -24,13 +24,18 @@ Person::Person(string fname, string lname, string bdate, string input_email, str
     this->l_name = lname;
     birthdate = new Date(bdate);
     
-    // reads in and ignores until we find '('
+    // create variables for phone/email type and their respective info
     string email_type;
     string addr;
 
     string phone_type;
     string num;
+    
+    // used to iterate through our string character by character 
     int i = 0;
+    int j = 0;
+
+    // go character by character until we find '('
     while (input_phone[i] != '(') {
         i++;
     }
@@ -44,7 +49,7 @@ Person::Person(string fname, string lname, string bdate, string input_email, str
         i++;
     }
 
-    // reads in the phone
+    // reads in the phone info
     for (int k = i+2; k < input_phone.size(); k++) {
         num.push_back(input_phone[k]);
     }
@@ -52,8 +57,7 @@ Person::Person(string fname, string lname, string bdate, string input_email, str
     // create phone class
     phone = new Phone(phone_type, num);
 
-    // reads in and ignores until we find '('
-    int j = 0;
+    // reads character by character until we find '('
     while (input_email[j] != '(') {
         j++;
     }
@@ -146,12 +150,15 @@ void Person::set_person(string filename){
     (Work) julia@wh.com
     */
 
+    // create fstream and open file
+    // initialize input buffer aka "input"
     fstream file;
     file.open(filename.c_str());
     string input;
 
-    // for 5 lines in our file
+    // for the 5 lines in our file
     for (int i = 0; i < 5; i++) {
+        // read in a line
         getline(file, input);
 
         // 1st line is first name
@@ -170,6 +177,7 @@ void Person::set_person(string filename){
         if (i == 3) {
             string phone_type;
             string number;
+            // start j at 1 to skip the '('
             int j = 1;
 
             // reads in the type without parenthesis
@@ -179,6 +187,7 @@ void Person::set_person(string filename){
             }
 
             // reads in the number
+            // do j+2 to skip the blank space and ')' so we are placed at first character of the number
             for (int k = j+2; k < input.size(); k++) {
                 number.push_back(input[k]);
             }
@@ -190,6 +199,7 @@ void Person::set_person(string filename){
         if (i == 4) {
             string email_type;
             string addr;
+            // j = 1 to skip the '('
             int j = 1;
 
             // reads in the type without parenthesis
@@ -199,6 +209,7 @@ void Person::set_person(string filename){
             }
 
             // reads in the email
+            // do j+2 to skip the blank space and ')' so we are placed at first character of the email
             for (int k = j+2; k < input.size(); k++) {
                 addr.push_back(input[k]);
             }
@@ -209,7 +220,6 @@ void Person::set_person(string filename){
     }
 
     file.close();
-
 }
 
 
@@ -218,7 +228,7 @@ bool Person::operator==(const Person& rhs){
     // Note: you should check first name, last name and birthday between two persons
     // refer to bool Date::operator==(const Date& rhs)
 
-    // get birthdates
+    // get birthdates of both Persons
     string bday = birthdate->get_date();
     string rhs_bday = rhs.birthdate->get_date();
 
@@ -235,6 +245,7 @@ bool Person::operator==(const Person& rhs){
 
 bool Person::operator!=(const Person& rhs){ 
     // TODO: Complete this method!
+    // based off Data operator!=
     return !(*this == rhs);
 }
 

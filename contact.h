@@ -10,6 +10,8 @@ using namespace std;
 
 class Contact {
 //TODO: protected or private
+    // made string type protected as children classes still need to access type
+    // private means only the base class can access
 protected:
 	string type;
 public:
@@ -26,6 +28,7 @@ private:
 public:
     Email(string type, string email_addr);
     // TODO: Complete me!
+    // added derived functions
     string get_contact(string style = "full");
     void print();
     void set_contact();
@@ -39,6 +42,7 @@ private:
 public:
     Phone(string type, string phone_number);
     // TODO: Complete me!
+    // added derived functions
     string get_contact(string style = "full");
     void print();
     void set_contact();

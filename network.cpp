@@ -2,6 +2,7 @@
 #include <limits>
 #include "misc.h"
 #include <fstream>
+// included libraries
 #include <dirent.h>
 #include <vector>
 
@@ -39,6 +40,7 @@ Network::~Network(){
     //make the pointer the new head
     //continue until there are no more people aka head is NULL
     //added cout statements that are commented out that we used to check out destructor
+
  //   cout << count << endl;
  //   cout << head << endl;
     while(head != NULL){
@@ -75,9 +77,10 @@ void Network::push_back(Person* newEntry){
     newEntry->next = NULL;
     newEntry->prev = tail;
 
-    // this checks if it's the first node in the LL
+    // this checks if it's the first node added into the LL
     if (tail != NULL) {
-        // make tail point to the newEntry
+        // make tail point to the newEntry if it's not the first node added
+        // tail is what will be the 2nd to last node
         tail->next = newEntry;
     }
     // else statement only occurs once when tail = NULL
@@ -87,7 +90,7 @@ void Network::push_back(Person* newEntry){
         head = newEntry;
     }
 
-    // tail is now newEntry
+    // update tail so it now points to newEntry
     tail = newEntry;
     count++;
 }
@@ -129,6 +132,8 @@ void Network::saveDB(string filename){
 
     // create a ptr that goes through our whole LL
     Person* ptr = head;
+
+    // go through LL
     while(ptr != NULL){
         // get birthdate
         string birthdate = ptr->birthdate->get_date();
@@ -147,6 +152,7 @@ void Network::saveDB(string filename){
         // go to next person in LL/database
         ptr = ptr->next;
     }
+
     outfile.close();
 }
 
@@ -177,14 +183,17 @@ void Network::loadDB(string filename){
         lname = buff.substr(0, buff.find(','));
         fname = buff.substr(buff.find(',')+2);
         getline(infile, bdate);
-        // TODO: read email and phone
         
+        // TODO: read email and phone
+        // read in email and phone info using getline
+        // they are not parsed as they will be parsed in our Person constructor
         getline(infile, email);
         getline(infile, phone);
 
         // this line is to read the dash line
         getline(infile, buff);
         // TODO: use the constructor Person::Person(fname, lname, bdate, email, phone) to modify the following line
+        // create a new Person dynamically using constructor
         Person* newEntry = new Person(fname, lname, bdate, email, phone);
 
         this->push_back(newEntry);
@@ -213,10 +222,11 @@ Person* Network::search(string fname, string lname, string bdate){
             return ptr;
         }
 
+        // if not go to next node
         ptr = ptr->next;
     }
 
-    // if we don't find a match, return NULL
+    // if we don't find a match, delete our allocated memory and return NULL
     delete searchEntry;
     return NULL;
 }
@@ -227,10 +237,10 @@ bool Network::remove(string fname, string lname, string bdate){
     // Search if this person exists using search method. If it does not exist just return false! Else, remove the person from LL, make the other connections connected
     // Don't forget to delete allocated memory, change count and returning values!
 
-    //create a pointer to loctate where the person is in the LL
+    //create a pointer to locate where the person is in the LL
     Person* remove_ptr = search(fname, lname, bdate);
 
-    //if the person is the only one on the list then set the head and the tail to NULL
+    //if the person is the only one on the list, then set the head and the tail to NULL
     //the list is now empty
     if(count == 1){
         head = NULL;
@@ -252,13 +262,15 @@ bool Network::remove(string fname, string lname, string bdate){
         head = remove_ptr->next;
         head -> prev = NULL;
     }
-    //if the person is located in the middle of the list
-    //set the previous term of the next term to remove_ptr equal to the previous term of remove_ptr
-    //set the next term of the previous term of remove_ptr equal to the next term of remove_ptr
+    //if the person is located in the middle of the list, aka not head nor tail
+    //set the "prev" of the next node after the node we're deleting to = remove_ptr's prev 
+    //set the "next" of the node before the node we're deleting to = remove_ptr's next
+    // this makes it so we don't break our LL
     else{
         remove_ptr->next->prev = remove_ptr->prev;
         remove_ptr->prev->next = remove_ptr->next;
     }
+
     //decrement count because there is now one less person in the LL
     count--;
 }
@@ -301,8 +313,9 @@ void Network::showMenu(){
             // TODO: Complete me!
             cout << "Loading network database \n";
 
-            // create a vector that stores file names
+            // create a vector that stores .db file names
             vector < string > fileList;
+            // this is a flag that we'll use later to see if user input of a .db file matches an existing one
             int db_match_flag = 0;
 
             // TODO: print all the files in this same directory that have ".db" format
@@ -318,12 +331,14 @@ void Network::showMenu(){
 
                 // while we can read from directory
                 while ((ent = readdir (dir)) != NULL) {
+                	// read in file name into file_name
                     string file_name = ent->d_name;
 
                     // check file_name and find the .db format
                     for (int i = 0; i < file_name.size(); i++) {
+                    	// if we find a ".", we expect a "db" to follow it
                         if (file_name[i] == '.') {
-                            // if we find .db then print out the file name
+                            // if we find .db then print out the file name and add it to our vector of .db file names
                             if (file_name[i+1] == 'd' && file_name[i+2] == 'b') {
                                 cout << file_name << endl;
                                 fileList.push_back(file_name);
@@ -355,8 +370,9 @@ void Network::showMenu(){
                     db_match_flag = 1;
                 }
             }
-            // have a matching .db file
+            // if we have a matching .db file
             if (db_match_flag == 1) {
+            	// load it
                 loadDB(fileName.c_str());
                 // If file is loaded successfully, also print the count of persons in it: 
                 cout << "Network loaded from " << fileName << " with " << count << " persons \n";
@@ -379,10 +395,13 @@ void Network::showMenu(){
             // if there is nothing in our database aka head points to NULL
             if (head == NULL) {
                 cout << "No database found so we will add a new person \n";
+                // create a person with random info just so we have something to write to our output file
                 Person* newEntry = new Person("bob", "the builder", "1/1/1970", "(Nothing) nothing@usc.edu", "(Nothing) 123-456-7890");
+                // add it to empty database and save the database
                 push_front(newEntry);
                 saveDB(fileName.c_str());
             }
+            // else we will save our database/write to output file
             else {
                 saveDB(fileName.c_str());
             }
@@ -393,9 +412,9 @@ void Network::showMenu(){
             // Add a new person ONLY if it does not exists!
             cout << "Adding a new person \n";
 
+            // new variables to store info
             string email_type;
             string phone_type;
-
 
             // ask for person's info
             cout << "First Name: ";
@@ -413,6 +432,7 @@ void Network::showMenu(){
             cout << "Phone: ";
             getline(cin,phone);
 
+            // format email and phone info to format needed
             email = "(" + email_type + ") " + email;
             phone = "(" + phone_type + ") " + phone;
 
@@ -433,6 +453,7 @@ void Network::showMenu(){
         else if (opt == 4){
             // TODO: Complete me!
             cout << "Searching: \n";
+            // ask for first name, last name and birthdate
             cout << "First Name: ";
             getline(cin,fname);
             cout << "Last Name: ";
@@ -440,13 +461,14 @@ void Network::showMenu(){
             cout << "Birthdate (M/D/YYYY): ";
             getline(cin,bdate);
 
+            // call search function and it will return a pointer
             Person* ptr = search(fname, lname, bdate);
 
-            // if found: print person's firstname, lastname, bdate, email, phone using print_person()
+            // if found aka ptr != NULL, then print person's firstname, lastname, bdate, email, phone using print_person()
             if (ptr != NULL) {
                 ptr->print_person();
             }
-            // if not, cout << "Not found! \n";
+            // if not found, cout << "Not found! \n";
             else {
                 cout << "Not found! \n";
             }
@@ -461,10 +483,11 @@ void Network::showMenu(){
             cout << "Birthdate (M/D/YYYY): ";
             getline(cin, bdate);
 
+            // search to see if that person exists in database
             Person* ptr = search(fname, lname, bdate);
 
             // if found, cout << "Remove Successful! \n";
-            //remoce the name from the database
+            //remove the name from the database
             if (ptr != NULL) {
                 cout << "Remove Successful! \n";
                 remove(fname, lname, bdate);
@@ -479,6 +502,8 @@ void Network::showMenu(){
         else if (opt==6){
             // TODO: Complete me!
             cout << "Network Database: \n";
+
+            // added in call to printDB()
             printDB();
         }
         else
