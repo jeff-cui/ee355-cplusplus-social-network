@@ -106,8 +106,8 @@ void Network::saveDB(string filename){
         string birthdate = ptr->birthdate->get_date();
 
         // get email and phone info
-        string email_info = ptr->email->get_contact("not full style");
-        string phone_info = ptr->phone->get_contact("not full style");
+        string email_info = ptr->email->get_contact();
+        string phone_info = ptr->phone->get_contact();
 
         // write out to file in the format of studentDB.db
         outfile << ptr->l_name << ", " << ptr->f_name << endl;
