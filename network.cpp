@@ -96,8 +96,8 @@ void Network::saveDB(string filename){
     */
 
     // open fstream/file
-    fstream outfile;
-    outfile.open(filename.c_str());
+    ofstream outfile;
+    outfile.open(filename.c_str(), ofstream::trunc);
 
     // create a ptr that goes through our whole LL
     Person* ptr = head;
@@ -119,6 +119,7 @@ void Network::saveDB(string filename){
         // go to next person in LL/database
         ptr = ptr->next;
     }
+    outfile.close();
 }
 
 
@@ -315,7 +316,8 @@ void Network::showMenu(){
 
             // if there is nothing in our database aka head points to NULL
             if (head == NULL) {
-                Person* newEntry = new Person("", "", "", "(Nothing) nothing@usc.edu", "(Nothing) 123-456-7890");
+                cout << "No database found so we will add a new person \n";
+                Person* newEntry = new Person("bob", "the builder", "1/1/1970", "(Nothing) nothing@usc.edu", "(Nothing) 123-456-7890");
                 push_front(newEntry);
                 saveDB(fileName.c_str());
             }
