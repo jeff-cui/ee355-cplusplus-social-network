@@ -4,9 +4,9 @@
 
 Email::Email(string type, string email_addr){
     // TODO: Complete me!
-    //set type equal to type
+    // set type equal to type
     this->type = type;
-    //set the email address equal to the variable email_addr
+    // set the email address equal to the variable email_addr
     this->email_addr = email_addr;
 }
 
@@ -15,11 +15,11 @@ void Email::set_contact(){
     // TODO: Do not change the prompts!
 	
     cout << "Enter the type of email address: ";
+    // some code here
     cin >> type;
-    // some code here
     cout << "Enter email address: ";
-    cin >> email_addr;
     // some code here
+    cin >> email_addr;
 }
 
 
@@ -54,13 +54,6 @@ Phone::Phone(string type, string num){
         string x_3 = num.substr(8,4);
         this->phone_num = x_1 + x_2 + x_3;
     }
-
-    /* Note: Modify the following code can help you implementing this function
-     * This code has a bug, can you understand why?
-    long int area_code = atoi(num.substr(0, 3).c_str());
-    long int  number = atoi(num.substr(3).c_str()); 
-    this->phone_num = area_code*10000000 + number; 
-    */
 }
 
 
@@ -112,7 +105,6 @@ void Phone::set_contact(){
 
 string Phone::get_contact(string style){
     // TODO:
-
     string x1 = phone_num.substr(0,3);
     string x2 = phone_num.substr(3,3);
     string x3 = phone_num.substr(6,4);

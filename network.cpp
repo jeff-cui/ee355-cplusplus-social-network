@@ -1,4 +1,3 @@
-
 #include "network.h"
 #include <limits>
 #include "misc.h"
@@ -89,20 +88,37 @@ void Network::saveDB(string filename){
     // Note: notice the intentional flaw in this code, as compared to the note mentioned in printDB, 
     // now the one who is responsible for implementing Network should be aware of implementation of Person, not good! You will fix this in PA2. 
 
+    /*
+    Aguilar, Abel
+    7/27/91
+    (USC-email) aaaguila@usc.edu
+    (Cell) 8872871418
+    */
+
+    // open fstream/file
     fstream outfile;
     outfile.open(filename.c_str());
 
+    // create a ptr that goes through our whole LL
     Person* ptr = head;
     while(ptr != NULL){
-        ptr->print_person();
+        // get birthdate
+        string birthdate = ptr->birthdate->get_date();
+
+        // get email and phone info
+        string email_info = ptr->email->get_contact("not full style");
+        string phone_info = ptr->phone->get_contact("not full style");
+
+        // write out to file in the format of studentDB.db
+        outfile << ptr->l_name << ", " << ptr->f_name << endl;
+        outfile << birthdate << endl;
+        outfile << email_info << endl;
+        outfile << phone_info << endl;
         outfile << "------------------------------" << endl;
+
+        // go to next person in LL/database
         ptr = ptr->next;
     }
-
-    // get_date()
-    // get_contact() for Email and Phone with no full style
-
-
 }
 
 
@@ -313,6 +329,10 @@ void Network::showMenu(){
             // Add a new person ONLY if it does not exists!
             cout << "Adding a new person \n";
 
+            string email_type;
+            string phone_type;
+
+
             // ask for person's info
             cout << "First Name: ";
             getline(cin,fname);
@@ -320,10 +340,17 @@ void Network::showMenu(){
             getline(cin,lname);
             cout << "Birthdate (M/D/YYYY): ";
             getline(cin,bdate);
-            cout << "Email ( (Type) example@usc.edu ): ";
+            cout << "Email Type: ";
+            getline(cin,email_type);
+            cout << "Email: ";
             getline(cin,email);
-            cout << "Phone Number ( (Type) 000-000-0000 ): ";
+            cout << "Phone Type: ";
+            getline(cin,phone_type);
+            cout << "Phone: ";
             getline(cin,phone);
+
+            email = "(" + email_type + ") " + email;
+            phone = "(" + phone_type + ") " + phone;
 
             // search if they exist already or not
             Person* ptr = search(fname, lname, bdate);

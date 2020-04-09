@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "person.h"
 
@@ -8,8 +7,8 @@ int main(){
     c1.print_person();
     cout << "----------------\n";
 
-    // Person c2("Julia Scarlett Elizabeth", "Louis-Dreyfus", "1/13/1961", "Email (i don't really care): julia@wh.com", "Phone (this is a test): 213-222-1234");
-    Person c2("person_template.txt");
+    Person c2("Julia Scarlett Elizabeth", "Louis-Dreyfus", "1/13/1961", "Email (i don't really care) julia@wh.com", "Phone (this is a test) 213-222-1234");
+    //Person c2("person_template.txt");
     c2.print_person();
     cout << "----------------\n";
 

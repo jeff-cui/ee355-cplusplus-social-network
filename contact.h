@@ -38,10 +38,10 @@ private:
 	string phone_num; 
 public:
     Phone(string type, string phone_number);
+    // TODO: Complete me!
     string get_contact(string style = "full");
     void print();
     void set_contact();
-    // TODO: Complete me!
 };
 
 #endif

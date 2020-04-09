@@ -17,7 +17,7 @@ Date::Date(int day, int month, int year){
 
 Date::Date(string str){
     // input format is M/D/YYYY
-    // cout << "Constructor wtih string argument is called" << endl;
+    // cout << "Constructor with string argument is called" << endl;
     set_date(str); 
 }
 
@@ -116,6 +116,7 @@ bool Date::set_date(int day, int month, int year){
     this->day = day;
     this->year = year;
     if (check_date()==false){
+        // changed error to include this pointer when setting day, month and year
         cout << "Error! Invalid date!" << endl;
         cout << "Date set to default!" << endl;
         this->day = 1;

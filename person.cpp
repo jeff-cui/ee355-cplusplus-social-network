@@ -7,49 +7,30 @@ Person::Person(){
 
 
 Person::~Person(){
+    // TODO: complete the method!
+    // delete all allocated memory
     delete birthdate;
     delete email;
     delete phone;
-    // TODO: complete the method!
 }
 
 
 Person::Person(string fname, string lname, string bdate, string input_email, string input_phone) {
     // TODO: Complete this method!
     // phone and email strings are in full version
-
+    
+    // set f_name, l_name and birthdate
+    this->f_name = fname;
+    this->l_name = lname;
+    birthdate = new Date(bdate);
+    
+    // reads in and ignores until we find '('
     string email_type;
     string addr;
 
     string phone_type;
     string num;
-
     int i = 0;
-    int j = 0;
-
-    // reads in and ignores until we find '('
-    while (input_email[j] != '(') {
-        j++;
-    }
-
-    // increment once to skip the '('
-    j++;
-
-    // reads into email_type until we find ')'
-    while (input_email[j] != ')') {
-        email_type.push_back(input_email[j]);
-        j++;
-    }
-    // reads in the email
-    for (int k = j+2; k < input_email.size(); k++) {
-        addr.push_back(input_email[k]);
-    }
-
-    // create email class
-    email = new Email(email_type, addr);
-
-
-    // reads in and ignores until we find '('
     while (input_phone[i] != '(') {
         i++;
     }
@@ -71,12 +52,27 @@ Person::Person(string fname, string lname, string bdate, string input_email, str
     // create phone class
     phone = new Phone(phone_type, num);
 
+    // reads in and ignores until we find '('
+    int j = 0;
+    while (input_email[j] != '(') {
+        j++;
+    }
 
-    // set f_name, l_name and birthdate
-    this->f_name = fname;
-    this->l_name = lname;
-    birthdate = new Date(bdate);
+    // increment once to skip the '('
+    j++;
 
+    // reads into email_type until we find ')'
+    while (input_email[j] != ')') {
+        email_type.push_back(input_email[j]);
+        j++;
+    }
+    // reads in the email
+    for (int k = j+2; k < input_email.size(); k++) {
+        addr.push_back(input_email[k]);
+    }
+
+    // create email class
+    email = new Email(email_type, addr);
 }
 
 
@@ -94,21 +90,26 @@ void Person::set_person(){
     string temp;
     string type;
 
+    // get first name
     cout << "First Name: ";
-    // pay attention to how we read first name, as it can have spaces!
     getline(cin,f_name);
 
+    // get last name
 	cout << "Last Name: ";
     getline(cin,l_name);
 
+    // get birthdate
     cout << "Birthdate (M/D/YYYY): ";
     getline(cin,temp);
     // pay attention to how we passed argument to the constructor of a new object created dynamically using new command
     birthdate = new Date(temp); 
 
+    // get email type
     cout << "Type of email address: ";
     // code here
     getline(cin,type);
+
+    // get email address
     cout << "Email address: ";
     // code here
     getline(cin,temp);
@@ -116,17 +117,18 @@ void Person::set_person(){
     // set new email
     email = new Email(type, temp);
 
+    // get phone type
     cout << "Type of phone number: ";
     // code here
     getline(cin, type);
 
+    // get phone number
     cout << "Phone number: ";
     // code here
     getline(cin, temp);
 
     // set new phone number
     phone = new Phone(type, temp);
-    // code here
 }
 
 
@@ -220,10 +222,11 @@ bool Person::operator==(const Person& rhs){
     string bday = birthdate->get_date();
     string rhs_bday = rhs.birthdate->get_date();
 
-    // check first name, last name and birthdates
+    // check first name, last name and birthdates are equal
     if ( (f_name == rhs.f_name) && (l_name == rhs.l_name) && (bday == rhs_bday) ) {
         return true;
     }
+    // return false if not all of them match
     else {
         return false;
     }
