@@ -16,11 +16,39 @@ Network::Network(string fileName){
     // TODO: complete this method!
     // Implement it in one single line!
     // You may need to implement the load method before this!
+    
+    //initialize head tail and count
+    head = NULL;
+    tail = NULL;
+    count = 0;
+
+    //call loadDB to directly load a database when using this constructor
+    loadDB(fileName.c_str());
 }
 
 Network::~Network(){
     // TODO: Complete this method
     // Destructure delete all the Person
+
+    //create a pointer that keeps track of the nodes (people)
+    Person* destructor_ptr = head;
+
+    //run through every element in the LL 
+    //set the pointer equal to the next of the head
+    //delete the head
+    //make the pointer the new head
+    //continue until there are no more people aka head is NULL
+    //added cout statements that are commented out that we used to check out destructor
+ //   cout << count << endl;
+ //   cout << head << endl;
+    while(head != NULL){
+        destructor_ptr = head->next;
+        delete head;
+        head = destructor_ptr;
+        count--;
+    }
+//    cout << count << endl;
+//    cout << head << endl;
 }
 
 
@@ -199,6 +227,40 @@ bool Network::remove(string fname, string lname, string bdate){
     // Search if this person exists using search method. If it does not exist just return false! Else, remove the person from LL, make the other connections connected
     // Don't forget to delete allocated memory, change count and returning values!
 
+    //create a pointer to loctate where the person is in the LL
+    Person* remove_ptr = search(fname, lname, bdate);
+
+    //if the person is the only one on the list then set the head and the tail to NULL
+    //the list is now empty
+    if(count == 1){
+        head = NULL;
+        tail = NULL;
+    }
+
+    //if the person is located at the tail of the LL
+    //set the new tail equal to the term prev the pointer
+    //set the term after the tail equal to NULL
+    else if(remove_ptr->next == NULL){
+        tail = remove_ptr->prev;     
+        tail->next = NULL;
+    }
+
+    //if the person is locted at the head of the LL
+    //set the new head equal to the term next in the LL
+    //set the term before the newly set header equal to NULL
+    else if(remove_ptr->prev == NULL){
+        head = remove_ptr->next;
+        head -> prev = NULL;
+    }
+    //if the person is located in the middle of the list
+    //set the previous term of the next term to remove_ptr equal to the previous term of remove_ptr
+    //set the next term of the previous term of remove_ptr equal to the next term of remove_ptr
+    else{
+        remove_ptr->next->prev = remove_ptr->prev;
+        remove_ptr->prev->next = remove_ptr->next;
+    }
+    //decrement count because there is now one less person in the LL
+    count--;
 }
 
 void Network::showMenu(){
@@ -393,10 +455,26 @@ void Network::showMenu(){
             // TODO: Complete me!
             cout << "Removing a person \n";
             cout << "First name: ";
+            getline(cin, fname);
             cout << "Last name: ";
+            getline(cin, lname);
             cout << "Birthdate (M/D/YYYY): ";
+            getline(cin, bdate);
+
+            Person* ptr = search(fname, lname, bdate);
+
             // if found, cout << "Remove Successful! \n";
+            //remoce the name from the database
+            if (ptr != NULL) {
+                cout << "Remove Successful! \n";
+                remove(fname, lname, bdate);
+            }
             // if not found: cout << "Person not found! \n";
+            else {
+                cout << "Person not found! \n";
+            }
+
+
         }
         else if (opt==6){
             // TODO: Complete me!
