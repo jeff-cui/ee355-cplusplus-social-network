@@ -258,3 +258,9 @@ void Person::print_person(){
     phone->print();
 }
 
+// phase 2 add friend
+void Person::addFriend(Person* newFriend) {
+    // add newFriend using push_back
+    friends.push_back(newFriend);
+}
+

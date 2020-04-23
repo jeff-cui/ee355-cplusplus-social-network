@@ -16,6 +16,9 @@ class Network{
         int count; 
         Person* search(string fname, string lname, string bdate);
 
+        // phase 2
+        Person* search(string queryid);
+
     public:
         Network();
         Network(string fileName);
@@ -27,6 +30,9 @@ class Network{
         void loadDB(string filename);
         void printDB();
         void showMenu();
+
+        // Phase 2
+        void friends_recommendation(int k);
 };
 
 #endif

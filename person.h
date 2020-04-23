@@ -4,6 +4,7 @@
 #include "date.h"
 #include "contact.h"
 #include "fstream"
+#include <vector>
 using namespace std;
 
 class Person{
@@ -29,6 +30,12 @@ public:
 	void set_person(string filename);
     bool operator==(const Person& rhs);
     bool operator!=(const Person& rhs);
+
+    // phase 2
+    // added friends functionality
+    vector <Person*> friends;
+    void addFriend(Person* newFriend);
+    void save_person(ofstream &outfile);
 };
 
 

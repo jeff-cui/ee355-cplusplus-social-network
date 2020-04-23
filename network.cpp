@@ -231,6 +231,43 @@ Person* Network::search(string fname, string lname, string bdate){
     return NULL;
 }
 
+// phase 2 search function
+Person* Network::search(string queryid){
+    // Search the Network for the given ID
+    // if found, returns a pointer to it, else returns NULL
+    // Don't forget to delete allocated memory.
+
+	// these strings will be passed into IDName to create ID of a Person
+    string lname;
+    string fname;
+    string id;
+
+    // pointer that starts at head of LL
+    Person* ptr = head;
+
+    // run through LL
+    while(ptr != NULL) {
+    	// get last and first name of the node/Person
+    	lname = ptr->l_name;
+    	fname = ptr->f_name;
+
+    	// make their ID
+    	id = IDName(lname, fname);
+
+    	// if this id equals our queryid, then Person exists and return ptr
+    	if (id == queryid) {
+    		return ptr;
+    	}
+    	// if it doesn't match, go to next node
+    	else {
+        	ptr = ptr->next;
+    	}
+    }
+
+    // if we don't find a match, return NULL
+    return NULL;
+}
+
 bool Network::remove(string fname, string lname, string bdate){
     // TODO: Complete this method! Follow these steps:
     // Create a new person with the the give arguments as you do in search
@@ -292,6 +329,9 @@ void Network::showMenu(){
         cout << "4. Search \n";
         cout << "5. Remove a person \n";
         cout << "6. Print database \n";
+
+        // phase 2 
+        cout << "7. Add friends \n";
         
         cout << "\nSelect an option ... ";
         
@@ -505,6 +545,64 @@ void Network::showMenu(){
 
             // added in call to printDB()
             printDB();
+        }
+
+        // phase 2, option 7 add friend
+        else if (opt==7){
+            cout << "Add Friends: \n";
+            string id1;
+            string id2;
+
+            // pointers that point to Persons if we want to add friends
+            Person* ptr2;
+            Person* ptr1;
+
+            // these are flag variables to check if we found a Person based on ID
+            int person1_found = 0;
+            int person2_found = 0;
+
+            // ask for Person 1's ID
+            cout << "Person 1 ID: ";
+            getline(cin, id1);
+
+            // search for their ID
+            ptr1 = search(id1);
+
+            // if ptr1 is NULL aka ID was not found, print and go back to main menu
+            if (ptr1 == NULL) {
+            	cout << "Person is not found! \n";
+            }
+            // set flag to say we found Person 1
+            else {
+            	person1_found = 1;
+            }
+
+            // if we found Person 1, proceed with Person 2
+            if (person1_found == 1) {
+            	// else ask for Person 2's ID
+	            cout << "Person 2 ID: ";
+	            getline(cin, id2);
+
+	            // search for Person 2
+	            ptr2 = search(id2);
+
+	            // if ptr2 is NULL aka ID was not found, print and go back to main menu
+	            if (ptr2 == NULL) {
+	            	cout << "Person is not found! \n";
+	            }
+	            // set flag to say we found Person 2
+	            else {
+	            	person2_found = 1;
+	            }
+            }
+
+            // if we have Person 1 and Person 2 found
+            if (person1_found == 1 && person2_found == 1) {
+            	// if both IDs are found, addFriend for both Person 1 and 2
+            	cout << "ADDING FRIENDS" << endl;
+	            ptr1->addFriend(ptr2);
+	            ptr2->addFriend(ptr1);
+            } 
         }
         else
             cout << "Nothing matched!\n";
