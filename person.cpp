@@ -256,6 +256,19 @@ void Person::print_person(){
 	birthdate->print_date("Month D, YYYY");
     email->print();
     phone->print();
+
+    // phase 2 print friends as well
+    string id;
+    // for the whole friends vector
+    for (int i = 0; i < friends.size(); i++) {
+        // make the ID of each Person
+        string lname = friends[i]->l_name;
+        string fname = friends[i]->f_name;
+        id = IDName(lname, fname);
+
+        // print out IDs
+        cout << id << endl;
+    }
 }
 
 // phase 2 add friend

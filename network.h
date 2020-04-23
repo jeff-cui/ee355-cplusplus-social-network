@@ -18,6 +18,7 @@ class Network{
 
         // phase 2
         Person* search(string queryid);
+        vector< vector<string> > friends_list;
 
     public:
         Network();
@@ -33,6 +34,7 @@ class Network{
 
         // Phase 2
         void friends_recommendation(int k);
+        bool allCharactersSame(string s);
 };
 
 #endif

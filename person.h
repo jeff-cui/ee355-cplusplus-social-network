@@ -3,6 +3,7 @@
 
 #include "date.h"
 #include "contact.h"
+#include "misc.h"
 #include "fstream"
 #include <vector>
 using namespace std;

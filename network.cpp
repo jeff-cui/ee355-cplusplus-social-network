@@ -156,6 +156,16 @@ void Network::saveDB(string filename){
     outfile.close();
 }
 
+bool allCharactersSame(string s) {
+	int n = s.length();
+	for (int i = 1; i < n; i++) {
+		if (s[i] != s[0]) {
+			return false;
+		}
+	}
+
+	return true;
+}
 
 void Network::loadDB(string filename){
     // TODO: Complete this method!
@@ -165,6 +175,8 @@ void Network::loadDB(string filename){
     // Phone number can be with dashes or without them
     // You need to use the following constructor of the Person class, Person::Person(fname, lname, bdate, email, phone)
     
+	int found_dash_line_flag = 0;
+
     Person* ptr = head;
     while(head != NULL){
         ptr = head->next;
@@ -177,27 +189,88 @@ void Network::loadDB(string filename){
     ifstream infile;
     infile.open(filename.c_str());
     string buff, fname, lname, bdate, email, phone;
-    // TODO: Decalre other vairiable if needed
+    // TODO: Decalre other variable if needed
 
-    while(getline(infile, buff)){
+    // read database the 1st time, ignore IDs
+    while(getline(infile, buff)) {
+    	// read 1st four lines for name, bdate, email, phone
         lname = buff.substr(0, buff.find(','));
         fname = buff.substr(buff.find(',')+2);
         getline(infile, bdate);
-        
-        // TODO: read email and phone
         // read in email and phone info using getline
         // they are not parsed as they will be parsed in our Person constructor
         getline(infile, email);
         getline(infile, phone);
+/*
+        // keep reading until we reach the dotted line, ignore the ID
+        while (found_dash_line_flag == 0) {
+        	getline(infile, buff);
+        	cout << buff << endl;
 
-        // this line is to read the dash line
+        	
+        	// check if it is the dash line, if it is set flag to true and leave while loop
+        	if (allCharactersSame(buff)) {
+        		cout << buff << endl;
+				cout << "found dash line" << endl;
+				found_dash_line_flag = 1;
+        	}
+        	else {
+        		cout << buff << endl;
+				cout << "no" << endl;
+        	}
+        }
+
+        // reaching here means we reached dash line, set flag back
+        found_dash_line_flag = 0;*/
+
+        // read the dash line
         getline(infile, buff);
+
         // TODO: use the constructor Person::Person(fname, lname, bdate, email, phone) to modify the following line
         // create a new Person dynamically using constructor
         Person* newEntry = new Person(fname, lname, bdate, email, phone);
 
         this->push_back(newEntry);
     }
+
+/*
+    infile.close();
+    // reopen file so we're back at the top of the file
+    infile.open(filename.c_str());
+
+    // read database the 2nd time, only look for IDs
+    // run through LL
+    ptr = head;
+    while(ptr != NULL) {
+    	// skip the 1st four lines of Person info cause we don't want it this time
+    	getline(infile, buff);
+        getline(infile, bdate);
+        getline(infile, email);
+        getline(infile, phone);
+
+        // keep reading until we reach the dotted line, add IDs
+        while (found_dash_line_flag == 0) {
+        	// read in the next line
+        	getline(infile, buff);
+        	// check if it is the dash line, if it is set flag to true and leave while loop
+        	if (buff[0] == '-') {
+        		found_dash_line_flag = 1;
+        	}
+        	// else we wanna add this ID
+        	else {
+        		// find pointer of Person who owns the ID
+        		Person* friend_ptr = search(buff);
+        		// add that friend_ptr to our current node/Person's friend list
+        		ptr->addFriend(friend_ptr);
+        	}
+        }
+
+        // reaching here means we reached dash line, set flag back and go to next Person in the LL
+        ptr = ptr->next;
+        found_dash_line_flag = 0;
+    }
+
+    */
 }
 
 Person* Network::search(string fname, string lname, string bdate){
