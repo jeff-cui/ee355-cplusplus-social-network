@@ -277,3 +277,30 @@ void Person::addFriend(Person* newFriend) {
     friends.push_back(newFriend);
 }
 
+// phase 2 save a Person's info to output file via saveDB()
+void Person::save_person(ofstream &outfile) {
+    // get birthdate, email and phone info
+    string bday = birthdate->get_date();
+    string email_info = email->get_contact("");
+    string phone_info = phone->get_contact("");
+
+    // write out to file in the format of network.db example
+    outfile << l_name << ", " << f_name << endl;
+    outfile << bday << endl;
+    outfile << email_info << endl;
+    outfile << phone_info << endl;
+
+    // for the whole friends vector
+    for (int i = 0; i < friends.size(); i++) {
+        // make the ID of each Person
+        string lname = friends[i]->l_name;
+        string fname = friends[i]->f_name;
+        string id = IDName(lname, fname);
+
+        // write IDs to file
+        outfile << id << endl;
+    }
+
+    // write dash line
+    outfile << "------------------------------" << endl;
+}

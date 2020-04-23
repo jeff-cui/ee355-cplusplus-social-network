@@ -110,7 +110,7 @@ void Network::printDB(){
     }
 }
 
-
+// modified for phase 2 to use save_person function
 void Network::saveDB(string filename){
     // TODO: Complete this method!
     // Saves the netwrok in file <filename>
@@ -118,13 +118,6 @@ void Network::saveDB(string filename){
     // Look at studentDB.db as a template
     // Note: notice the intentional flaw in this code, as compared to the note mentioned in printDB, 
     // now the one who is responsible for implementing Network should be aware of implementation of Person, not good! You will fix this in PA2. 
-
-    /*
-    Aguilar, Abel
-    7/27/91
-    (USC-email) aaaguila@usc.edu
-    (Cell) 8872871418
-    */
 
     // open fstream/file
     ofstream outfile;
@@ -135,36 +128,15 @@ void Network::saveDB(string filename){
 
     // go through LL
     while(ptr != NULL){
-        // get birthdate
-        string birthdate = ptr->birthdate->get_date();
-
-        // get email and phone info
-        string email_info = ptr->email->get_contact();
-        string phone_info = ptr->phone->get_contact();
-
-        // write out to file in the format of studentDB.db
-        outfile << ptr->l_name << ", " << ptr->f_name << endl;
-        outfile << birthdate << endl;
-        outfile << email_info << endl;
-        outfile << phone_info << endl;
-        outfile << "------------------------------" << endl;
+        // call savePerson function with ofstream
+        ptr->save_person(outfile);
 
         // go to next person in LL/database
         ptr = ptr->next;
     }
 
+    // close file
     outfile.close();
-}
-
-bool allCharactersSame(string s) {
-	int n = s.length();
-	for (int i = 1; i < n; i++) {
-		if (s[i] != s[0]) {
-			return false;
-		}
-	}
-
-	return true;
 }
 
 void Network::loadDB(string filename){
