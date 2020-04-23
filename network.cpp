@@ -201,30 +201,19 @@ void Network::loadDB(string filename){
         // they are not parsed as they will be parsed in our Person constructor
         getline(infile, email);
         getline(infile, phone);
-/*
+
         // keep reading until we reach the dotted line, ignore the ID
         while (found_dash_line_flag == 0) {
         	getline(infile, buff);
-        	cout << buff << endl;
-
         	
         	// check if it is the dash line, if it is set flag to true and leave while loop
-        	if (allCharactersSame(buff)) {
-        		cout << buff << endl;
-				cout << "found dash line" << endl;
+        	if (buff.find('-') == 0 || infile.eof()) {
 				found_dash_line_flag = 1;
-        	}
-        	else {
-        		cout << buff << endl;
-				cout << "no" << endl;
         	}
         }
 
         // reaching here means we reached dash line, set flag back
-        found_dash_line_flag = 0;*/
-
-        // read the dash line
-        getline(infile, buff);
+        found_dash_line_flag = 0;
 
         // TODO: use the constructor Person::Person(fname, lname, bdate, email, phone) to modify the following line
         // create a new Person dynamically using constructor
@@ -233,9 +222,8 @@ void Network::loadDB(string filename){
         this->push_back(newEntry);
     }
 
-/*
-    infile.close();
     // reopen file so we're back at the top of the file
+    infile.close();
     infile.open(filename.c_str());
 
     // read database the 2nd time, only look for IDs
@@ -252,9 +240,10 @@ void Network::loadDB(string filename){
         while (found_dash_line_flag == 0) {
         	// read in the next line
         	getline(infile, buff);
+        	
         	// check if it is the dash line, if it is set flag to true and leave while loop
-        	if (buff[0] == '-') {
-        		found_dash_line_flag = 1;
+        	if (buff.find('-') == 0 || infile.eof()) {
+				found_dash_line_flag = 1;
         	}
         	// else we wanna add this ID
         	else {
@@ -269,8 +258,6 @@ void Network::loadDB(string filename){
         ptr = ptr->next;
         found_dash_line_flag = 0;
     }
-
-    */
 }
 
 Person* Network::search(string fname, string lname, string bdate){
