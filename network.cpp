@@ -127,7 +127,7 @@ void Network::saveDB(string filename){
     Person* ptr = head;
 
     // go through LL
-    while(ptr != NULL){
+    while(ptr != NULL) {
         // call savePerson function with ofstream
         ptr->save_person(outfile);
 
@@ -344,6 +344,39 @@ bool Network::remove(string fname, string lname, string bdate){
     count--;
 }
 
+// phase 2 friends recommendation function
+void Network::friends_recommendation(int k) {
+	/*
+	Create a vector or list to remember all visited persons to avoid processing a Person more than once. 
+	And create a vector or list to remember the recommended friends.
+	Start traversal from a Person, iterate over all its friends. 
+	Add all its friends into visited vector. 
+	We don't add any one into the recommendation vector in this step because they are already friends of the person.
+	For each of the friends of the person, iterate over all its friends. 
+	If one is not in the visited vector (i.e. not a friend of the person), add it to the recommended vector and add it to the visited vector.
+	Repeat iii until reach the level K.
+*/
+
+	// make visited persons vector
+
+	
+	// make a recommend friends vector
+
+	// iterate through the LL
+	while (ptr != NULL) {
+		// for each node/Person, do BFS with their friends, iterate for K levels as necessary
+
+
+		// add people in this search that aren't friends with the original node/Person to the recommend friends vector
+
+
+		ptr = ptr->next;
+	}
+
+	// print our recommend friends vector
+
+}
+
 void Network::showMenu(){
     // TODO: Complete this method!
     // All the prompts are given to you, 
@@ -364,6 +397,7 @@ void Network::showMenu(){
 
         // phase 2 
         cout << "7. Add friends \n";
+        cout << "8. Friends Recommendation \n";
         
         cout << "\nSelect an option ... ";
         
@@ -636,6 +670,17 @@ void Network::showMenu(){
 	            ptr2->addFriend(ptr1);
             } 
         }
+        // phase 2 friends recommendation
+        else if (opt==8){
+        	// ask user to input level K
+        	int k;
+            cout << "Input level K: \n";
+            cin >> k;
+
+            // run friends recommendation
+            friends_recommendation(k);
+        }
+
         else
             cout << "Nothing matched!\n";
         
