@@ -402,6 +402,7 @@ void Network::friends_recommendation(int k) {
 		ptr = ptr->next;
 
 		// clear visited persons vector and go to next index in recommended friends vector
+		// clear queue
 	}
 
 	// print our recommend friends vector
