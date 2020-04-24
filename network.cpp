@@ -357,20 +357,51 @@ void Network::friends_recommendation(int k) {
 	Repeat iii until reach the level K.
 */
 
+	// make 3 counters
+	// nodes_in_current_distance, this tracks how many nodes are in the queue for a certain distance 
+	// ex. K = 2, tracks how many nodes are distance 2 away
+	// nodes_in_next_distance, this tracks how many nodes are in the queue for the next distance range
+	// ex. K = 2, this tracks all the nodes that will be K = 3
+	// nodes_completed, this tracks how many nodes we've processed for the current distance range
+	// ex. K = 2, if there are 2 nodes total, this tracks progress like we've done 1 node of 2
+	
 	// make visited persons vector
 
 	
-	// make a recommend friends vector
+	// make a recommended friends vector
+
 
 	// iterate through the LL
 	while (ptr != NULL) {
-		// for each node/Person, do BFS with their friends, iterate for K levels as necessary
+		// add ptr to queue, set nodes_in_current_distance to 1
+		// set x = 0 for distance aka the node we're currently on
+		// add ptr to visited list
 
+		while (x < k) {
+			// take first node from queue and remove it from the queue
 
-		// add people in this search that aren't friends with the original node/Person to the recommend friends vector
+			// for i until friend vector size of the node we took from the queue
+				// friend_ptr = search(id)
+				// iterate through visited persons vector
+					// if they aren't in the visited persons vector...
+					// add friend_ptr to end of queue, add 1 to next_distance_range counter, add them to visited persons list
+					// also search for friend_ptr in ptr node's friend list and see if they are in the friend list
+						// if no match, add to recommended vector
 
+			// add 1 to in nodes completed counter
 
+			// if nodes completed counter = nodes_in_current_distance
+				// x++ to go to next distance
+				// nodes completed counter = 0
+				// nodes_in_current_distance = nodes_in_next_distance
+				// nodes_in_next_distance = 0
+		}
+
+		// we finished finding recommendations for this node within K distance
+		// go to next node
 		ptr = ptr->next;
+
+		// clear visited persons vector and go to next index in recommended friends vector
 	}
 
 	// print our recommend friends vector
