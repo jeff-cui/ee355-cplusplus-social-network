@@ -357,56 +357,165 @@ void Network::friends_recommendation(int k) {
 	Repeat iii until reach the level K.
 */
 
+	// iterates through LL to find recommended friends for each Person
+	Person* ptr = head;
+	// this is used to point to the current Person/node we're processing
+	Person* processing_ptr = head;
+
 	// make 3 counters
 	// nodes_in_current_distance, this tracks how many nodes are in the queue for a certain distance 
 	// ex. K = 2, tracks how many nodes are distance 2 away
+	int nodes_in_current_distance = 0;
+
 	// nodes_in_next_distance, this tracks how many nodes are in the queue for the next distance range
 	// ex. K = 2, this tracks all the nodes that will be K = 3
+	int nodes_in_next_distance = 0;
+
 	// nodes_completed, this tracks how many nodes we've processed for the current distance range
 	// ex. K = 2, if there are 2 nodes total, this tracks progress like we've done 1 node of 2
-	
-	// make visited persons vector
+	int nodes_completed = 0;
 
-	
-	// make a recommended friends vector
+	// this variable tracks which distance range we're currently processing
+	// aka current_distance = 1 means we're currently processing all nodes with K = 1
+	int current_distance;
 
+	// flag that triggers if we have a node in visited_persons vector already
+	int already_visited = 0;
+
+	// flag that triggers if we should recommend a Person
+	int dont_recommend_person = 0;
+	
+	// make visited persons vector of size count aka total amount of people in our LL/network
+	vector <Person*> visited_persons;
+
+	// make a recommended friends vector, row = number of people in LL aka count
+	// one column = one recommended friend, which will vary for each row
+	vector < vector <Person*> > recommended_friends(count);
+	int x = 0;
+
+	// make a queue to process Persons/nodes
+	list <Person*> queue;
 
 	// iterate through the LL
 	while (ptr != NULL) {
 		// add ptr to queue, set nodes_in_current_distance to 1
+		queue.push_back(ptr);
+		nodes_in_current_distance = 1;
+		
 		// set x = 0 for distance aka the node we're currently on
+		current_distance = 0;
+		
 		// add ptr to visited list
+		visited_persons.push_back(ptr);
 
-		while (x < k) {
-			// take first node from queue and remove it from the queue
+		// iterate by distance level until we reach k
+		while (current_distance < k) {
+			// if we can take first node from queue aka queue's not empty, then remove it from the queue and add 1 to nodes completed
+			if (queue.size() != 0) {
+				processing_ptr = queue.front();
+				queue.pop_front();
+				nodes_completed++;
+			}
 
-			// for i until friend vector size of the node we took from the queue
-				// friend_ptr = search(id)
-				// iterate through visited persons vector
-					// if they aren't in the visited persons vector...
+			// for the friend's list of our processing ptr
+			for (int i = 0; i < processing_ptr->friends.size(); i++) {
+		        // set friend_ptr
+				Person* friend_ptr = processing_ptr->friends[i];
+
+				// check if this friend_ptr is in our visited_persons vector
+				for (int j = 0; j < visited_persons.size(); j++) {
+					// if this friend_ptr is found in visited_persons then trigger a flag and we don't do anything with them
+					if (friend_ptr == visited_persons[j]) {
+						already_visited = 1;
+					}
+				}
+
+				// if they aren't in the visited persons vector...
+				if (already_visited == 0) {
 					// add friend_ptr to end of queue, add 1 to next_distance_range counter, add them to visited persons list
+					queue.push_back(friend_ptr);
+					nodes_in_next_distance++;
+					visited_persons.push_back(friend_ptr);
+
 					// also search for friend_ptr in ptr node's friend list and see if they are in the friend list
-						// if no match, add to recommended vector
+					for (int i = 0; i < ptr->friends.size(); i++) {
+						if (friend_ptr == ptr->friends[i]) {
+							dont_recommend_person = 1;
+						}
+					}
 
-			// add 1 to in nodes completed counter
+					// if no match, add to recommended vector
+					if (dont_recommend_person == 0) {
+						recommended_friends[x].push_back(friend_ptr);
+						dont_recommend_person = 0;
+					}
+					// always assume we will recommend so always set flag back to 0
+					else if (dont_recommend_person == 1) {
+						dont_recommend_person = 0;
+					}
 
-			// if nodes completed counter = nodes_in_current_distance
-				// x++ to go to next distance
-				// nodes completed counter = 0
-				// nodes_in_current_distance = nodes_in_next_distance
-				// nodes_in_next_distance = 0
+					already_visited = 0;
+				}
+				// always assume we haven't visited so always set flag back to 0
+				else if (already_visited == 1) {
+					already_visited = 0;
+				}
+			// go to the next friend in processing_ptr's friend list and repeat
+			}
+
+			// check if we've processed all nodes in the current distance
+			if (nodes_completed == nodes_in_current_distance) {
+				// if we have, go to next distance
+				current_distance++;
+
+				// reset all counters
+				nodes_completed = 0;
+				nodes_in_current_distance = nodes_in_next_distance;
+				nodes_in_next_distance = 0;
+			}
 		}
 
 		// we finished finding recommendations for this node within K distance
 		// go to next node
 		ptr = ptr->next;
 
-		// clear visited persons vector and go to next index in recommended friends vector
-		// clear queue
+		// clear visited persons vector and the queue and set all counters back to 0
+		visited_persons.clear();
+		queue.clear();
+		nodes_completed = 0;
+		nodes_in_current_distance = 0;
+		nodes_in_next_distance = 0;
+
+		// go to next row of recommended friends vector
+		x++;
 	}
 
-	// print our recommend friends vector
+	// done finding recommendations within K distance for all Persons
+	// print our recommended friends vector
+	for (int i = 0; i < recommended_friends.size(); i++) {
+		Person* index_to_node = head;
 
+		// based off the index in recommended_friends, get the pointer of that person
+		for (int k = 0; k < i; k++) {
+			index_to_node = index_to_node->next;
+		}
+		
+		// print out name
+		cout << "For " << index_to_node->l_name << ", " << index_to_node->f_name << ": " << endl;
+
+		// goes through columns aka recommended friends and prints out
+		for (int j = 0; j < recommended_friends[i].size(); j++) {
+			// make the ID of each Person
+	        string lname = recommended_friends[i][j]->l_name;
+	        string fname = recommended_friends[i][j]->f_name;
+	        string id = IDName(lname, fname);
+
+	        // print out IDs
+	        cout << id << endl;
+		}
+
+		cout << endl;
+	}
 }
 
 void Network::showMenu(){

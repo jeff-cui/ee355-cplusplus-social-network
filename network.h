@@ -6,6 +6,7 @@
 #include "date.h"
 // You may need to add more libraries 
 #include <stdlib.h>
+#include <list>
 class Network{
 
     private:
